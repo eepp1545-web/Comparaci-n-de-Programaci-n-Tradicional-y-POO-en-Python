@@ -1,0 +1,159 @@
+PROGRAMACIÓN TRADICIONAL
+"""
+Promedio semanal del clima - Versión con funciones.
+
+Aquí simplemente recojo las temperaturas de cada día,
+las guardo en una lista y al final saco el promedio.
+Nada complicado, solo lo necesario para que funcione bien.
+"""
+
+DIAS = [
+    "Lunes", "Martes", "Miércoles",
+    "Jueves", "Viernes", "Sábado", "Domingo"
+]
+
+
+def pedir_temperaturas():
+    """
+    Pide al usuario la temperatura de cada día.
+    Devuelve una lista con los valores ingresados.
+    """
+    temperaturas = []
+
+    for dia in DIAS:
+        while True:
+            entrada = input(f"Temperatura del {dia}: ")
+            try:
+                valor = float(entrada)
+                temperaturas.append(valor)
+                break
+            except ValueError:
+                print("No se puede procesar eso. Intenta con un número.")
+
+    return temperaturas
+
+
+def calcular_promedio(numeros):
+    """
+    Recibe una lista de números y devuelve su promedio.
+    """
+    return sum(numeros) / len(numeros)
+
+
+def mostrar_resultado(temps, prom):
+    """
+    Muestra los datos ingresados y el promedio final.
+    """
+    print("\nResumen de la semana:")
+    for dia, temp in zip(DIAS, temps):
+        print(f"{dia}: {temp:.1f} °C")
+
+    print(f"\nPromedio de la semana: {prom:.2f} °C")
+
+
+def main():
+    print("PROMEDIO SEMANAL DEL CLIMA (FUNCIONES)\n")
+    temps = pedir_temperaturas()
+    prom = calcular_promedio(temps)
+    mostrar_resultado(temps, prom)
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+CÓDIGO EN POO
+"""
+Promedio semanal del clima - Versión orientada a objetos.
+
+En esta versión organizo los datos dentro de clases:
+- Una clase para un día de clima.
+- Otra para manejar toda la semana.
+
+La idea es tener el mismo resultado que en la versión tradicional,
+pero con una estructura más ordenada para cuando el programa crezca.
+"""
+
+
+class DiaClima:
+    """
+    Representa un día con su temperatura.
+    """
+
+    def __init__(self, nombre, temperatura):
+        self.nombre = nombre
+        self.temperatura = temperatura  # setter validará
+
+    @property
+    def temperatura(self):
+        return self._temperatura
+
+    @temperatura.setter
+    def temperatura(self, valor):
+        # Validación suave, sin complicarse
+        if not isinstance(valor, (int, float)):
+            raise ValueError("La temperatura debe ser numérica.")
+        self._temperatura = float(valor)
+
+    def __str__(self):
+        return f"{self.nombre}: {self.temperatura:.1f} °C"
+
+
+class SemanaClima:
+    """
+    Maneja todos los días de la semana y calcula el promedio.
+    """
+
+    DIAS = [
+        "Lunes", "Martes", "Miércoles",
+        "Jueves", "Viernes", "Sábado", "Domingo"
+    ]
+
+    def __init__(self):
+        self.dias = []
+
+    def cargar_desde_usuario(self):
+        """
+        Pide la temperatura de cada día y crea los objetos correspondientes.
+        """
+        for nombre in self.DIAS:
+            while True:
+                entrada = input(f"Temperatura del {nombre}: ")
+                try:
+                    temp = float(entrada)
+                    self.dias.append(DiaClima(nombre, temp))
+                    break
+                except ValueError:
+                    print("Ese valor no es válido. Prueba otra vez.")
+
+    def promedio(self):
+        """
+        Calcula el promedio de todas las temperaturas ingresadas.
+        """
+        valores = [d.temperatura for d in self.dias]
+        return sum(valores) / len(valores)
+
+    def mostrar_resumen(self):
+        """
+        Presenta cada día y el promedio final de la semana.
+        """
+        print("\nResumen de la semana (POO):")
+        for d in self.dias:
+            print(d)
+
+        print(f"\nPromedio semanal: {self.promedio():.2f} °C")
+
+
+def main():
+    print("PROMEDIO SEMANAL DEL CLIMA (POO)\n")
+    semana = SemanaClima()
+    semana.cargar_desde_usuario()
+    semana.mostrar_resumen()
+
+
+if __name__ == "__main__":
+    main()
